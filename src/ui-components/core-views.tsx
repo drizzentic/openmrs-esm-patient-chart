@@ -9,6 +9,7 @@ import ProgramsOverview from "../widgets/programs/programs-overview.component";
 import MedicationsOverview from "../widgets/medications/medications-overview.component";
 import AppointmentsOverview from "../widgets/appointments/appointments-overview.component";
 import { DashboardConfigType } from "./dashboard/dashboard.component";
+import AppointmentsForm from "../widgets/appointments/appointments-form.component";
 
 const coreMultiDashboards = {};
 export const coreDashboards: CoreDashboardsType = {
@@ -89,7 +90,7 @@ export const coreDashboards: CoreDashboardsType = {
 
   appointmentsOverviewDashboard: {
     name: "appointmentsOverviewDashboard",
-    widgets: [{ name: "appointmentsOverview" }]
+    widgets: [{ name: "appointmentsOverview" }, { name: "newAppointment" }]
   }
 };
 
@@ -147,6 +148,12 @@ export const coreWidgets: CoreWidgetsType = {
     name: "appointmentsOverview",
     component: () => {
       return <AppointmentsOverview />;
+    }
+  },
+  newAppointment: {
+    name: "newAppointment",
+    component: () => {
+      return <AppointmentsForm />;
     }
   }
 };

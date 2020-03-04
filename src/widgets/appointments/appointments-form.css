@@ -1,0 +1,35 @@
+.appointmentContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+​ .inputContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  text-align: left;
+  justify-content: space-between;
+  margin: 0.125rem;
+  padding: 0.125rem;
+}
+​ .inputContainer label {
+  font-weight: 500;
+  padding: 0.125rem;
+}
+​ .inputContainer select {
+  width: 100%;
+  padding: 0.25rem;
+  border: 0.0625rem solid var(--omrs-color-ink-low-contrast);
+  outline: none;
+  border-radius: 0.0625rem;
+  cursor: pointer;
+}
+​ .inputContainer textarea {
+  padding: 0.625rem;
+}
+​ .saveButton {
+  margin: 0.5rem 0rem;
+}
+​ .saveButton button {
+  width: 100%;
+}
