@@ -10,6 +10,11 @@
   overflow-y: scroll;
 }
 
+.patientBanner {
+  position: relative;
+  z-index: 1;
+}
+
 .chartreview {
   grid-row: 1;
   grid-column: 1;
@@ -33,4 +38,12 @@
 
 .sidebar {
   z-index: 1;
+}
+
+.invisible {
+  display: none;
+}
+
+.visible {
+  display: grid;
 }

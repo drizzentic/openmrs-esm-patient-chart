@@ -1,10 +1,10 @@
 import React from "react";
-import { Tabs, Panel } from "../widgets/tabs/tabs.component";
-import { getNewWorkspaceItem, WorkspaceTab } from "./workspace.resource";
+import { Tabs, Panel } from "@openmrs/esm-patient-chart-widgets";
+import { getNewWorkspaceItem, WorkspaceItem } from "@openmrs/esm-api";
 
 export default function Workspace(props: any) {
-  const [openTabs, setOpenTabs] = React.useState<WorkspaceTab[]>([]);
-  const [selectedTab, setSelectedTab] = React.useState();
+  const [openTabs, setOpenTabs] = React.useState<WorkspaceItem[]>([]);
+  const [selectedTab, setSelectedTab] = React.useState(null);
 
   React.useEffect(() => {
     const sub = getNewWorkspaceItem().subscribe(item => {
@@ -43,6 +43,7 @@ export default function Workspace(props: any) {
       updatedOpenTabs.splice(index, 1);
       setOpenTabs(updatedOpenTabs);
       setSelectedTab(getSelectedTabAfterRemove(index, selectedTab));
+      props.openTabs(updatedOpenTabs);
     }
   }
 
@@ -68,6 +69,14 @@ export default function Workspace(props: any) {
     setOpenTabs(updatedTabs);
   }
 
+  function onCloseTabRequest(index, tab) {
+    setWorkEnded(index);
+    removeTab(index);
+    if (tab.componentClosed) {
+      tab.componentClosed();
+    }
+  }
+
   return (
     <>
       {openTabs.length && (
@@ -76,20 +85,23 @@ export default function Workspace(props: any) {
           setSelected={setSelectedTab}
           removeTab={removeTab}
         >
-          {openTabs.map((tab, i) => (
-            <Panel
-              key={i}
-              title={tab.name}
-              style={selectedTab === i ? {} : { display: "none" }}
-            >
-              <tab.component
-                {...tab.props}
-                entryStarted={() => setWorkBegan(i)}
-                entrySubmitted={() => setWorkEnded(i)}
-                entryCancelled={() => setWorkEnded(i)}
-              />
-            </Panel>
-          ))}
+          {openTabs.map((tab, i) => {
+            return (
+              <Panel
+                key={i}
+                title={tab.name}
+                style={selectedTab === i ? {} : { display: "none" }}
+              >
+                <tab.component
+                  {...tab.props}
+                  entryStarted={() => setWorkBegan(i)}
+                  entrySubmitted={() => setWorkEnded(i)}
+                  entryCancelled={() => setWorkEnded(i)}
+                  closeComponent={() => onCloseTabRequest(i, tab)}
+                />
+              </Panel>
+            );
+          })}
         </Tabs>
       )}
     </>

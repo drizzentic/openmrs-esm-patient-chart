@@ -4,7 +4,7 @@ const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 
 module.exports = env => ({
-  entry: path.resolve(__dirname, "src/openmrs-esm-patient-chart.tsx"),
+  entry: path.resolve(__dirname, "src/index.ts"),
   output: {
     filename: "openmrs-esm-patient-chart.js",
     libraryTarget: "system",
@@ -50,11 +50,13 @@ module.exports = env => ({
     disableHostCheck: true
   },
   externals: [
+    /^@openmrs\/esm.*/,
+    "i18next",
+    "single-spa",
     "react",
     "react-dom",
-    /^@openmrs\/esm/,
-    "i18next",
-    "react-i18next"
+    "react-i18next",
+    "react-router-dom"
   ],
   plugins: [
     new ForkTsCheckerWebpackPlugin(),

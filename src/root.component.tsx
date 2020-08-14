@@ -1,41 +1,16 @@
 import React from "react";
 import { BrowserRouter, Route } from "react-router-dom";
 import openmrsRootDecorator from "@openmrs/react-root-decorator";
-import PatientBanner from "./banner/patient-banner.component";
-import Sidebar from "./sidebar/sidebar.component";
+import { PatientBanner, VisitDialog } from "@openmrs/esm-patient-chart-widgets";
 import WorkspaceWrapper from "./workspace/workspace-wrapper.component";
 import ChartReview from "./chart-review/chart-review.component";
 import styles from "./root.css";
-import { defineConfigSchema, validators } from "@openmrs/esm-module-config";
+import { defineConfigSchema } from "@openmrs/esm-module-config";
 import { AppPropsContext } from "./app-props-context";
+import { esmPatientChartSchema } from "./config-schemas/openmrs-esm-patient-chart-schema";
 
 function Root(props) {
-  defineConfigSchema("@openmrs/esm-patient-chart", {
-    defaultTabIndex: {
-      default: 0
-    },
-    widgets: {
-      default: [
-        "summaries",
-        "results",
-        "orders",
-        "encounters",
-        "conditions",
-        "programs",
-        "allergies"
-      ],
-      arrayElements: { validators: [validators.isString] }
-    },
-    widgetDefinitions: {
-      arrayElements: {
-        name: { validators: [validators.isString] },
-        esModule: { validators: [validators.isString] },
-        label: { validators: [validators.isString] },
-        path: { validators: [validators.isString] }
-      },
-      default: []
-    }
-  });
+  defineConfigSchema("@openmrs/esm-patient-chart-app", esmPatientChartSchema);
 
   return (
     <AppPropsContext.Provider value={{ appProps: props }}>
@@ -48,16 +23,20 @@ function Root(props) {
             flexDirection: "column"
           }}
         >
-          <aside style={{ height: "2.75rem" }}>
+          <aside className={styles.patientBanner}>
             <Route path="/patient/:patientUuid/chart">
               <PatientBanner match={props.match} />
             </Route>
           </aside>
           <div className={styles.grid}>
             <div className={styles.chartreview}>
-              <Route path="/patient/:patientUuid/chart/:widget?">
+              <Route path="/patient/:patientUuid/chart/:view?/:subview?">
                 <ChartReview />
               </Route>
+              <Route
+                path="/patient/:patientUuid/chart"
+                render={routeProps => <VisitDialog {...routeProps} />}
+              />
             </div>
             <div className={styles.workspace}>
               <Route
@@ -72,20 +51,7 @@ function Root(props) {
   );
 }
 
-function getPatientChartRootUrl() {
-  return {
-    url: "/patient/:patientUuid/chart/",
-    name: "Chart"
-  };
-}
-
 export default openmrsRootDecorator({
   featureName: "patient-chart",
-  moduleName: "@openmrs/esm-patient-chart"
+  moduleName: "@openmrs/esm-patient-chart-app"
 })(Root);
-
-/*
-        <div className={styles.sidebar}>
-          <Sidebar></Sidebar>
-        </div>
-*/
